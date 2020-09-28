@@ -415,7 +415,7 @@ static const UIEdgeInsets NYTPhotosViewControllerCloseButtonImageInsets = {3, 0,
     
 - (void)dismissViewControllerAnimated:(BOOL)animated userInitiated:(BOOL)isUserInitiated completion:(void (^)(void))completion {
     if (self.presentedViewController) {
-        [super dismissViewControllerAnimated:animated completion:completion];
+        //[super dismissViewControllerAnimated:animated completion:completion];
         return;
     }
     
