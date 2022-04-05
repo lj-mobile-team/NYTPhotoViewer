@@ -288,14 +288,33 @@ static const UIEdgeInsets NYTPhotosViewControllerCloseButtonImageInsets = {3, 0,
     if (!clientDidHandle && (self.currentlyDisplayedPhoto.image || self.currentlyDisplayedPhoto.imageData)) {
         UIImage *image = self.currentlyDisplayedPhoto.image ? self.currentlyDisplayedPhoto.image : [UIImage imageWithData:self.currentlyDisplayedPhoto.imageData];
         UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[image] applicationActivities:nil];
-        activityViewController.popoverPresentationController.barButtonItem = sender;
+        
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+            activityViewController.popoverPresentationController.barButtonItem = sender;
+        } else {
+            activityViewController.popoverPresentationController.barButtonItem = self.rightBarButtonItem;
+        }
+        
+        typeof(self) __weak weakSelf = self;
+
         activityViewController.completionWithItemsHandler = ^(NSString * __nullable activityType, BOOL completed, NSArray * __nullable returnedItems, NSError * __nullable activityError) {
-            if (completed && [self.delegate respondsToSelector:@selector(photosViewController:actionCompletedWithActivityType:)]) {
-                [self.delegate photosViewController:self actionCompletedWithActivityType:activityType];
+            if (completed && [weakSelf.delegate respondsToSelector:@selector(photosViewController:actionCompletedWithActivityType:)]) {
+                [weakSelf.delegate photosViewController:weakSelf actionCompletedWithActivityType:activityType];
             }
+            
+           // if (activityType== UIActivityTypeSaveToCameraRoll && completed) {
+           // } else {
+                [weakSelf dismissViewControllerAnimated:NO completion:nil];
+           // }
         };
 
-        [self displayActivityViewController:activityViewController animated:YES];
+        UIViewController *fakeVC = [UIViewController new];
+
+        [self presentViewController:fakeVC animated:NO completion:^{
+            [fakeVC presentViewController:activityViewController animated:YES completion:nil];
+        }];
+        
+        //[self displayActivityViewController:activityViewController animated:YES];
     }
 }
 
@@ -410,7 +429,7 @@ static const UIEdgeInsets NYTPhotosViewControllerCloseButtonImageInsets = {3, 0,
     
 - (void)dismissViewControllerAnimated:(BOOL)animated userInitiated:(BOOL)isUserInitiated completion:(void (^)(void))completion {
     if (self.presentedViewController) {
-        //[super dismissViewControllerAnimated:animated completion:completion];
+        [super dismissViewControllerAnimated:animated completion:completion];
         return;
     }
     
