@@ -117,7 +117,8 @@ static const CGFloat NYTPhotoCaptionViewVerticalMargin = 7.0;
     self.textView.dataDetectorTypes = UIDataDetectorTypeNone;
     self.textView.backgroundColor = [UIColor clearColor];
     self.textView.textContainerInset = UIEdgeInsetsMake(NYTPhotoCaptionViewVerticalMargin, NYTPhotoCaptionViewHorizontalMargin, NYTPhotoCaptionViewVerticalMargin, NYTPhotoCaptionViewHorizontalMargin);
-
+    self.textView.textContainerInset = UIEdgeInsetsMake(0, 0, 30, 0);
+    
     [self addSubview:self.textView];
     
     NSLayoutConstraint *topConstraint = [NSLayoutConstraint constraintWithItem:self.textView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0];
